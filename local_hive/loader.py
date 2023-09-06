@@ -39,13 +39,15 @@ class SkillBus(FakeBus):
 
 
 class HiveMindExternalSkillWrapper:
-    def __init__(self, skill_directory, port=6989, host="127.0.0.1"):
+    def __init__(self, skill_directory, key=None, password=None, crypto_key=None, host='127.0.0.1', port=5678,
+                 useragent="HiveMindExternalSkillWrapperV0.0.1", self_signed=True, share_bus=False,
+                 compress=True, binarize=True):
         skill_id = os.path.basename(skill_directory)
 
         self.path = skill_directory
         self.skill_id = skill_id
 
-        self.hive = HiveMessageBusClient(self.skill_id, port=port, host=host)
+        self.hive = HiveMessageBusClient(key, port=port, host=host, password=password,self_signed=self_signed, crypto_key=crypto_key)
         self.hive.on_close = self.handle_shutdown
 
         self.bus = SkillBus(self.skill_id, self.hive)
